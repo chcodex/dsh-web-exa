@@ -57,7 +57,7 @@ Exa 驱动的 **Web 搜索** 与 **Web 抓取** provider，注册进 DeepSeek Ha
 | `fetchApiKey` | — | 抓取用字面量 API key |
 | `fetchApiKeyEnv` | `EXA_API_KEY` | 抓取用 API key 的环境变量名 |
 | `fetchBaseURL` | `https://mcp.exa.ai/mcp` | 抓取 MCP 端点 |
-| `fetchMaxCharacters` | `3000` | 每页抓取字符上限 |
+| `fetchMaxCharacters` | `15000` | 每页抓取字符上限 |
 | `fetchTimeoutMs` | `30000` | 抓取超时（ms） |
 
 > 搜索与抓取共享同一个 `EXA_API_KEY` 环境变量；如需分开可分别用 `apiKeyEnv` / `fetchApiKeyEnv`。

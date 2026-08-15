@@ -92,7 +92,7 @@ export interface Config {
   fetchApiKeyEnv?: string;
   /** Exa MCP endpoint base URL for fetch; defaults to `https://mcp.exa.ai/mcp`. */
   fetchBaseURL?: string;
-  /** Maximum characters extracted per fetched page; defaults to 3000. */
+  /** Maximum characters extracted per fetched page; defaults to 15000. */
   fetchMaxCharacters?: number;
   /** Fetch timeout budget (ms); defaults to 30000. */
   fetchTimeoutMs?: number;

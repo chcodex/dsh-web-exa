@@ -29,8 +29,8 @@ export const EXA_FETCH_DEFAULT_BASE_URL = "https://mcp.exa.ai/mcp";
 /** Environment variable naming this provider's optional API key. */
 export const EXA_FETCH_API_KEY_ENV = "EXA_API_KEY";
 
-/** Default maximum characters extracted per page (matches Exa's MCP default). */
-export const EXA_FETCH_DEFAULT_MAX_CHARACTERS = 3000;
+/** Default maximum characters extracted per page (raised above Exa's 3000 MCP default). */
+export const EXA_FETCH_DEFAULT_MAX_CHARACTERS = 15000;
 
 /** Default cooperative timeout budget for one fetch call (ms). */
 export const EXA_FETCH_DEFAULT_TIMEOUT_MS = 30000;
