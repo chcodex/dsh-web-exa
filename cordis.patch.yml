@@ -1,0 +1,9 @@
+# dsh-web-exa bundle layer: registered by name so Node module resolution
+# finds the installed package. Applies after dsh-base, so the providers coexist
+# with the official deepseek-official provider; selection is by config or
+# $DSH_WEB_SEARCH_PROVIDER / $DSH_WEB_FETCH_PROVIDER (see @deepseek-ai/dsh-web
+# selection semantics).
+
+- insert:
+    - id: web-exa
+      name: dsh-web-exa
