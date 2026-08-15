@@ -1,0 +1,77 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Verify build output
+        run: |
+          test -f lib/index.js
+          test -f lib/provider.js
+          test -f lib/fetch.js
+          test -f lib/switch.js
+          test -f lib/types/index.d.ts
+          echo "build output verified"
+
+      - name: Package release artifacts
+        run: |
+          mkdir -p dist
+          cp -r lib dist/lib
+          cp package.json README.md cordis.patch.yml dist/
+          cd dist && tar -czf ../dsh-web-exa-${{ github.ref_name }}.tar.gz .
+          cd .. && zip -r dsh-web-exa-${{ github.ref_name }}.zip dist
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body: |
+            ## dsh-web-exa ${{ github.ref_name }}
+
+            Exa-backed web search (`web_search_exa`) and fetch (`web_fetch_exa`) providers for the DeepSeek Harness `ctx.web` seam.
+
+            ### 包含内容
+            - 构建产物 `lib/`（含 search / fetch / switch）
+            - `package.json`、`cordis.patch.yml`、`README.md`
+
+            ### 安装方式
+            解压后，在 profile 的 `package.json` 中：
+            ```json
+            {
+              "dependencies": {
+                "dsh-web-exa": "file:/path/to/dsh-web-exa-${{ github.ref_name }}"
+              }
+            }
+            ```
+            然后 `pnpm install` 并重启 DSH。
+          files: |
+            dsh-web-exa-${{ github.ref_name }}.tar.gz
+            dsh-web-exa-${{ github.ref_name }}.zip
