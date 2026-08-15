@@ -18,7 +18,7 @@ import { AnonymousSwitch, ExaRateLimitedError, isRateLimited, parseNonOkError } 
  * JSON-RPC call, SSE/JSON parsing, and the mapping of Exa's rendered text
  * blocks (`Title:/URL:/Published:/Highlights:`, `---` separated) into the
  * seam's normalized `sources[]`.
- * @module dsh-web-exa/provider
+ * @module dsh-web-exa/search
  */
 
 /** Stable id this provider registers under. */

@@ -35,10 +35,11 @@ jobs:
       - name: Verify build output
         run: |
           test -f lib/index.js
-          test -f lib/provider.js
+          test -f lib/search.js
           test -f lib/fetch.js
           test -f lib/switch.js
           test -f lib/types/index.d.ts
+          test ! -e lib/provider.js
           echo "build output verified"
 
       - name: Package release artifacts

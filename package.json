@@ -15,7 +15,7 @@
   },
   "files": [
     "lib/index.js",
-    "lib/provider.js",
+    "lib/search.js",
     "lib/fetch.js",
     "lib/switch.js",
     "lib/types/**/*.d.ts",

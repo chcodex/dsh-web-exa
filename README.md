@@ -108,7 +108,7 @@ Exa 驱动的 **Web 搜索** 与 **Web 抓取** provider，注册进 DeepSeek Ha
 ./node_modules/.bin/tsc -p tsconfig.json
 ```
 
-- 源码：`src/provider.ts`（搜索）、`src/fetch.ts`（抓取）、`src/switch.ts`（限流降级开关）、`src/index.ts`（插件入口）
+- 源码：`src/search.ts`（搜索）、`src/fetch.ts`（抓取）、`src/switch.ts`（限流降级开关）、`src/index.ts`（插件入口）
 - 依赖：`@deepseek-ai/dsh-web`（`ctx.web` seam）、`@deepseek-ai/cordis`、`@deepseek-ai/dsh-settings`、`@deepseek-ai/schemastery`
 
 ## License

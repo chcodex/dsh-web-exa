@@ -12,8 +12,8 @@ import {
   EXA_DEFAULT_TIMEOUT_MS,
   EXA_DEFAULT_TYPE,
   EXA_PROVIDER_ID,
-} from "./provider.js";
-import type { ExaSearchProviderOptions } from "./provider.js";
+} from "./search.js";
+import type { ExaSearchProviderOptions } from "./search.js";
 import {
   ExaFetchProvider,
   EXA_FETCH_API_KEY_ENV,
@@ -47,8 +47,8 @@ export {
   EXA_DEFAULT_TIMEOUT_MS,
   EXA_DEFAULT_TYPE,
   EXA_PROVIDER_ID,
-} from "./provider.js";
-export type { ExaSearchProviderOptions } from "./provider.js";
+} from "./search.js";
+export type { ExaSearchProviderOptions } from "./search.js";
 
 export {
   ExaFetchProvider,

@@ -11,7 +11,7 @@ import { AnonymousSwitch, ExaRateLimitedError, isRateLimited, parseNonOkError } 
  * (`https://mcp.exa.ai/mcp`) over JSON-RPC `tools/call` with the `web_fetch_exa`
  * tool, retrieving a page as Exa's clean rendered markdown. Anonymous by default;
  * an optional `EXA_API_KEY` (or literal `apiKey`) is appended as a query
- * parameter when present, mirroring `dsh-web-exa/provider`.
+ * parameter when present, mirroring `dsh-web-exa/search`.
  *
  * The wire format is the provider's MCP server; this module owns only the
  * JSON-RPC call, SSE/JSON parsing, and the mapping of Exa's rendered block
