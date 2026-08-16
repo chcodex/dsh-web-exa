@@ -108,6 +108,8 @@ Exa 驱动的 **Web 搜索** 与 **Web 抓取** provider，注册进 DeepSeek Ha
 ./node_modules/.bin/tsc -p tsconfig.json
 ```
 
+> `lib/` 是构建产物（已在 `.gitignore` 中），`main` / `files` 指向它。CI 发布与 `prepack`（`npm pack` / `pnpm publish` 前）都会自动重建；本地以 `link:` 安装时吃的是工作区里的 `lib/`，改动 `src/` 后需重新执行上面的构建，否则会用到过期产物。
+
 - 源码：`src/search.ts`（搜索）、`src/fetch.ts`（抓取）、`src/switch.ts`（限流降级开关）、`src/index.ts`（插件入口）
 - 依赖：`@deepseek-ai/dsh-web`（`ctx.web` seam）、`@deepseek-ai/cordis`、`@deepseek-ai/dsh-settings`、`@deepseek-ai/schemastery`
 

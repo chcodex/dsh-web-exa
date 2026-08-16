@@ -73,7 +73,7 @@ interface McpResponse {
  * <body>
  * ```
  *
- * Returns the body kind (always `html`, since Exa yields clean markdown), the
+ * Returns the body kind (always `text`, since Exa yields clean markdown), the
  * body content, and the first URL found. Falls back to the request URL when no
  * `URL:` line is present.
  */
@@ -144,8 +144,8 @@ function fetchAborted(signal: AbortSignal): WebError {
   return new WebError("Exa fetch aborted", "WEB_ABORTED", { cause: signal.reason });
 }
 
-/** Combine caller cancellation and the operation timeout budget. */
-function withTimeout(signal: AbortSignal | undefined, timeoutMs: number): AbortSignal | undefined {
+/** Combine caller cancellation and the operation timeout budget; never `undefined`. */
+function withTimeout(signal: AbortSignal | undefined, timeoutMs: number): AbortSignal {
   if (signal === undefined) return AbortSignal.timeout(timeoutMs);
   return AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)]);
 }
@@ -214,7 +214,7 @@ export class ExaFetchProvider implements WebFetchProvider {
       return {
         url: finalUrl,
         statusCode: 200,
-        body: { kind: "html", content },
+        body: { kind: "text", content },
         truncated: false,
       };
     } catch (error) {
@@ -237,7 +237,7 @@ export class ExaFetchProvider implements WebFetchProvider {
         return {
           url: finalUrl,
           statusCode: 200,
-          body: { kind: "html", content },
+          body: { kind: "text", content },
           truncated: false,
         };
       }
@@ -257,6 +257,7 @@ export class ExaFetchProvider implements WebFetchProvider {
     const endpoint = new URL(options.baseURL);
     if (keyValue !== undefined) endpoint.searchParams.set("exaApiKey", keyValue);
 
+    const requestSignal = withTimeout(signal, options.timeoutMs);
     let response: Response;
     try {
       response = await fetch(endpoint, {
@@ -275,18 +276,16 @@ export class ExaFetchProvider implements WebFetchProvider {
             arguments: arguments_,
           },
         }),
-        ...(withTimeout(signal, options.timeoutMs) !== undefined
-          ? { signal: withTimeout(signal, options.timeoutMs) }
-          : {}),
+        signal: requestSignal,
       });
     } catch (error) {
-      if (signal?.aborted === true || isAbortError(error)) throw fetchAborted(signal ?? new AbortController().signal);
+      if (requestSignal.aborted || isAbortError(error)) throw fetchAborted(requestSignal);
       if (error instanceof WebError) throw error;
       throw new WebError(`Exa fetch request failed: ${String(error)}`, "WEB_PROVIDER_ERROR", { cause: error });
     }
 
     if (!response.ok) {
-      const body = await this.readBody(response, signal);
+      const body = await this.readBody(response, requestSignal);
       const envelope = parseNonOkError(body);
       if (isRateLimited(response.status, envelope.error)) throw new ExaRateLimitedError();
       throw new WebError(
@@ -295,7 +294,7 @@ export class ExaFetchProvider implements WebFetchProvider {
       );
     }
 
-    const text = await this.readBody(response, signal);
+    const text = await this.readBody(response, requestSignal);
     const payload = parseMcpResponse(text);
     if (payload === undefined) {
       throw new WebError("Exa returned no fetch content; the URL may not have been retrievable", "WEB_PROVIDER_ERROR");
@@ -304,11 +303,11 @@ export class ExaFetchProvider implements WebFetchProvider {
   }
 
   /** Read the response body, translating aborts to `WEB_ABORTED`. */
-  private async readBody(response: Response, signal: AbortSignal | undefined): Promise<string> {
+  private async readBody(response: Response, signal: AbortSignal): Promise<string> {
     try {
       return await response.text();
     } catch (error) {
-      if (signal?.aborted === true || isAbortError(error)) throw fetchAborted(signal ?? new AbortController().signal);
+      if (signal.aborted === true || isAbortError(error)) throw fetchAborted(signal);
       throw new WebError(`Exa fetch response body failed: ${String(error)}`, "WEB_PROVIDER_ERROR", { cause: error });
     }
   }
